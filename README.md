@@ -1,14 +1,14 @@
-# casse_brique
+# <img src="assets/icon.png" alt="icon" width="4%"/> Casse-Briques - Un remake
 
-Ce projet consiste à faire un remake  du jeu classique de casse-briques, il sera développé en C++ avec l'utilisation de la bibliothèque SDL2 pour l'affichage.
+Ce projet consiste à faire un remake du jeu classique de casse-briques, il sera développé en C++ avec l'utilisation de la bibliothèque SDL2 pour l'affichage.
 
 ## Fonctionnalités
 
-- [] Plateforme déplaçable au clavier ou à la souris.
-- [] Balle rebondissant en fonction de son angle d'impact.
-- [] Briques de différents types avec différentes résistances.
-- [] Bonus/malus, y compris le multi-balle.
-- [] Grilles chargées depuis un fichier ASCII.
+- [ ] Plateforme déplaçable au clavier ou à la souris.
+- [ ] Balle rebondissant en fonction de son angle d'impact.
+- [ ] Briques de différents types avec différentes résistances.
+- [ ] Bonus/malus, y compris le multi-balle.
+- [ ] Grilles chargées depuis un fichier ASCII.
 
 
 ## Compilation et exécution
@@ -38,4 +38,4 @@ Eddine NASRI
 
 ## Licence
 
-Ce projet est sous [licence MIT](LICENSE).
+Ce projet est sous [licence](LICENSE).
