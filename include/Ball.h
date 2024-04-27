@@ -6,24 +6,27 @@
 class Ball : public GameObject {
 
   public:
-    Ball(int x, int y, int width, int height, SDL_Color color, int speedX,
-         int speedY, int resistance = 1)
-        : GameObject(x, y, width, height, color), _speedX(speedX),
-          _speedY(speedY), _resistance(resistance){};
+    Ball(int x, int y, double radius, SDL_Color color, int speedX, int speedY,
+         int resistance = 1)
+        : GameObject(x, y, radius, color), _speedX(speedX), _speedY(speedY),
+          _resistance(resistance){};
 
     // Getters
-    int getSpeedX() const;
-    int getSpeedY() const;
+    double getSpeedX() const;
+    double getSpeedY() const;
     int getResistance() const;
 
     // Setters
-    void setSpeedX(int speedX);
-    void setSpeedY(int speedY);
+    void setSpeedX(double speedX);
+    void setSpeedY(double speedY);
     void setResistance(int resistance);
 
+    // Methods
+    virtual void draw(SDL_Renderer *renderer) override;
+
   private:
-    int _speedX;
-    int _speedY;
+    double _speedX;
+    double _speedY;
     int _resistance;
 };
 

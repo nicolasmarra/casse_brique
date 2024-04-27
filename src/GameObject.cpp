@@ -8,6 +8,8 @@ int GameObject::getWidth() const { return _width; }
 
 int GameObject::getHeight() const { return _height; }
 
+double GameObject::getRadius() const { return _radius; }
+
 SDL_Color GameObject::getColor() const { return _color; }
 
 void GameObject::setX(int x) { _x = x; }
@@ -17,5 +19,7 @@ void GameObject::setY(int y) { _y = y; }
 void GameObject::setWidth(int width) { _width = width; }
 
 void GameObject::setHeight(int height) { _height = height; }
+
+void GameObject::setRadius(double radius) { _radius = radius; }
 
 void GameObject::setColor(SDL_Color color) { _color = color; }

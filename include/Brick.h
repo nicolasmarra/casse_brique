@@ -19,6 +19,9 @@ class Brick : public GameObject {
     void setResistance(int resistance);
     void setContainsBall(int containsBall);
 
+    // Methods
+    virtual void draw(SDL_Renderer *renderer) override;
+
   private:
     int _resistance;
     bool _containsBall;

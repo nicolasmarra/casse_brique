@@ -14,6 +14,10 @@ class Platform : public GameObject {
     // Setters
     void setSpeed(int speedX);
 
+    // Methods
+
+    virtual void draw(SDL_Renderer *renderer) override;
+
   private:
     int _speed;
 };

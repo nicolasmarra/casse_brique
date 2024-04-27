@@ -7,6 +7,7 @@ find_package(SDL2 REQUIRED)
 # Liste des fichiers source du projet (ajoutez les fichiers .cpp des classes ici)
 set(SOURCES 
     src/main.cpp
+    src/Game.cpp
     src/GameObject.cpp
     src/Brick.cpp
     src/Ball.cpp
