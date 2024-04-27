@@ -6,8 +6,8 @@
 class Brick : public GameObject {
 
   public:
-    Brick(int x, int y, int width, int height, SDL_Color color, int resistance,
-          bool containsBall)
+    Brick(double x, double y, double width, double height, SDL_Color color,
+          int resistance, bool containsBall)
         : GameObject(x, y, width, height, color), _resistance(resistance),
           _containsBall(containsBall){};
 

@@ -6,8 +6,11 @@
 
 #define PLATFORM_WIDTH 125
 #define PLATFORM_HEIGHT 15
+#define PLATFORM_SPEED 10
 
 #define BALL_RADIUS 5
+#define BALL_SPEED_X 0.03
+#define BALL_SPEED_Y 0.06
 
 #define BRICK_WIDTH 59
 #define BRICK_HEIGHT 15
@@ -60,13 +63,13 @@ void Game::init() {
     }
 
     // Création de la plateforme et de la balle
-    _platform = std::make_shared<Platform>(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 20,
-                                           PLATFORM_WIDTH, PLATFORM_HEIGHT,
-                                           SDL_Color{255, 255, 0, 255}, 10);
+    _platform = std::make_shared<Platform>(
+        WINDOW_WIDTH / 2, WINDOW_HEIGHT - 20, PLATFORM_WIDTH, PLATFORM_HEIGHT,
+        SDL_Color{255, 255, 0, 255}, PLATFORM_SPEED);
 
-    _ball =
-        std::make_shared<Ball>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, BALL_RADIUS,
-                               SDL_Color{0, 255, 0, 255}, 0.03, 0.06, 1);
+    _ball = std::make_shared<Ball>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
+                                   BALL_RADIUS, SDL_Color{0, 255, 0, 255},
+                                   BALL_SPEED_X, BALL_SPEED_Y, 1);
 
     // Création des briques
     for (int i = 0; i < BRICKS_COUNT; i++) {
@@ -117,7 +120,16 @@ void Game::handleEvents() {
     }
 }
 
-void Game::update() {}
+void Game::update() {
+
+    _ball->move(WINDOW_WIDTH, WINDOW_HEIGHT);
+    _ball->collideWithPlatform(_platform->getX(), _platform->getY(),
+                               _platform->getWidth(), _platform->getHeight());
+    if (_ball->getY() + _ball->getRadius() > WINDOW_HEIGHT) {
+        _isRunning = false;
+        std::cout << "PERDU !" << std::endl;
+    }
+}
 
 void Game::render() {
     SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);

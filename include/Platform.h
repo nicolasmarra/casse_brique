@@ -5,7 +5,8 @@
 
 class Platform : public GameObject {
   public:
-    Platform(int x, int y, int width, int height, SDL_Color color, int speed)
+    Platform(double x, double y, double width, double height, SDL_Color color,
+             int speed)
         : GameObject(x, y, width, height, color), _speed(speed){};
 
     // Getters

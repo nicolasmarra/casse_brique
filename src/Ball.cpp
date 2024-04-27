@@ -1,4 +1,5 @@
 #include "Ball.h"
+#include <iostream>
 
 double Ball::getSpeedX() const { return _speedX; }
 
@@ -22,6 +23,40 @@ void Ball::draw(SDL_Renderer *renderer) {
 
             if (i * i + j * j <= getRadius() * getRadius())
                 SDL_RenderDrawPoint(renderer, getX() + i, getY() + j);
+        }
+    }
+}
+
+void Ball::move(int windowWidth, int windowHeight) {
+
+    setX(getX() + _speedX);
+    setY(getY() + _speedY);
+
+    if (getX() - getRadius() < 0 || getX() + getRadius() > windowWidth) {
+        _speedX *= -1;
+    }
+
+    if (getY() - getRadius() < 0 || getY() + getRadius() > windowHeight) {
+        _speedY *= -1;
+    }
+}
+
+void Ball::collideWithPlatform(double platformX, double platformY,
+                               double platformWidth, double platformHeight) {
+
+    if (getX() + getRadius() >= platformX &&
+        getX() - getRadius() <= platformX + platformWidth &&
+        getY() + getRadius() >= platformY &&
+        getY() - getRadius() <= platformY + platformHeight) {
+
+        if (getY() + getRadius() >= platformY &&
+            getY() - getRadius() <= platformY + platformHeight) {
+            _speedY *= -1;
+        }
+
+        if (getX() + getRadius() >= platformX &&
+            getX() - getRadius() <= platformX + platformWidth) {
+            _speedX *= -1;
         }
     }
 }

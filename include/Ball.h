@@ -6,8 +6,8 @@
 class Ball : public GameObject {
 
   public:
-    Ball(int x, int y, double radius, SDL_Color color, int speedX, int speedY,
-         int resistance = 1)
+    Ball(double x, double y, double radius, SDL_Color color, double speedX,
+         double speedY, int resistance = 1)
         : GameObject(x, y, radius, color), _speedX(speedX), _speedY(speedY),
           _resistance(resistance){};
 
@@ -23,6 +23,11 @@ class Ball : public GameObject {
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;
+
+    void move(int windowWidth, int windowHeight);
+
+    void collideWithPlatform(double platformX, double platformY,
+                             double platformWidth, double platformHeight);
 
   private:
     double _speedX;
