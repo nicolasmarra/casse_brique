@@ -18,6 +18,8 @@ class Platform : public GameObject {
 
     virtual void draw(SDL_Renderer *renderer) override;
 
+    void move(int direction, int windowWidth);
+
   private:
     int _speed;
 };

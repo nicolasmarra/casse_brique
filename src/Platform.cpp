@@ -10,3 +10,15 @@ void Platform::draw(SDL_Renderer *renderer) {
     SDL_Rect rect = {getX(), getY(), getWidth(), getHeight()};
     SDL_RenderFillRect(renderer, &rect);
 }
+
+void Platform::move(int direction, int windowWidth) {
+    if (direction == 1) {
+        if (getX() + getWidth() < windowWidth) {
+            setX(getX() + _speed);
+        }
+    } else if (direction == -1) {
+        if (getX() > 0) {
+            setX(getX() - _speed);
+        }
+    }
+}

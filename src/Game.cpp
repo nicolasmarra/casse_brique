@@ -62,7 +62,7 @@ void Game::init() {
     // Création de la plateforme et de la balle
     _platform = std::make_shared<Platform>(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 20,
                                            PLATFORM_WIDTH, PLATFORM_HEIGHT,
-                                           SDL_Color{255, 255, 0, 255}, 5);
+                                           SDL_Color{255, 255, 0, 255}, 10);
 
     _ball =
         std::make_shared<Ball>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, BALL_RADIUS,
@@ -100,8 +100,19 @@ void Game::init() {
 void Game::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+
         if (event.type == SDL_QUIT) {
             _isRunning = false;
+        }
+        if (event.type == SDL_KEYDOWN) {
+            switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+                _platform->move(-1, WINDOW_WIDTH);
+                break;
+            case SDLK_RIGHT:
+                _platform->move(1, WINDOW_WIDTH);
+                break;
+            }
         }
     }
 }
