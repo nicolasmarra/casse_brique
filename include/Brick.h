@@ -14,17 +14,23 @@ class Brick : public GameObject {
     // Getters
     int getResistance() const;
     int getContainsBall() const;
+    bool getDestroyed() const { return _isdestroyed; }
 
     // Setters
     void setResistance(int resistance);
     void setContainsBall(int containsBall);
+    void setDestroyed(bool destroyed) { _isdestroyed = destroyed; }
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;
+    void changeColor(SDL_Renderer *renderer);
+    bool collideWithBall(double ballX, double ballY, double ballRadius);
+    void setInvisible();
 
   private:
     int _resistance;
     bool _containsBall;
+    bool _isdestroyed = false;
 };
 
 #endif // BRICK_H

@@ -129,6 +129,8 @@ void Game::update() {
         _isRunning = false;
         std::cout << "PERDU !" << std::endl;
     }
+
+    checkBallBrickCollision();
 }
 
 void Game::render() {
@@ -146,3 +148,23 @@ void Game::render() {
 }
 
 void Game::clean() { SDL_Quit(); }
+
+void Game::checkBallBrickCollision() {
+    for (auto &brick : _bricks) {
+
+        if (brick->getDestroyed() == true)
+            continue;
+
+        if (_ball->collideWithBrick(brick->getX(), brick->getY(),
+                                    brick->getWidth(), brick->getHeight())) {
+
+            brick->setResistance(brick->getResistance() - 1);
+            if (brick->getResistance() == 0) {
+                brick->setDestroyed(true);
+                brick->setInvisible();
+                brick->draw(_renderer);
+            }
+            brick->changeColor(_renderer);
+        }
+    }
+}

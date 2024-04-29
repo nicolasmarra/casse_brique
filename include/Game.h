@@ -27,6 +27,8 @@ class Game {
 
     void setRenderer(SDL_Renderer *renderer) { _renderer = renderer; }
 
+    void checkBallBrickCollision();
+
   private:
     void init();
     void handleEvents();

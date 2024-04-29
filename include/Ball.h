@@ -29,6 +29,9 @@ class Ball : public GameObject {
     void collideWithPlatform(double platformX, double platformY,
                              double platformWidth, double platformHeight);
 
+    bool collideWithBrick(double brickX, double brickY, double brickWidth,
+                          double brickHeight);
+
   private:
     double _speedX;
     double _speedY;

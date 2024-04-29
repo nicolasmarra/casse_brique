@@ -60,3 +60,27 @@ void Ball::collideWithPlatform(double platformX, double platformY,
         }
     }
 }
+
+bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
+                            double brickHeight) {
+
+    if (getX() + getRadius() >= brickX &&
+        getX() - getRadius() <= brickX + brickWidth &&
+        getY() + getRadius() >= brickY &&
+        getY() - getRadius() <= brickY + brickHeight) {
+
+        if (getY() + getRadius() >= brickY &&
+            getY() - getRadius() <= brickY + brickHeight) {
+            _speedY *= -1;
+            return true;
+        }
+
+        if (getX() + getRadius() >= brickX &&
+            getX() - getRadius() <= brickX + brickWidth) {
+            _speedX *= -1;
+            return true;
+        }
+    }
+
+    return false;
+}
