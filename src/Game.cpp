@@ -67,18 +67,18 @@ void Game::init() {
         WINDOW_WIDTH / 2, WINDOW_HEIGHT - 20, PLATFORM_WIDTH, PLATFORM_HEIGHT,
         SDL_Color{255, 255, 0, 255}, PLATFORM_SPEED);
 
-    _ball = std::make_shared<Ball>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
-                                   BALL_RADIUS, SDL_Color{0, 255, 0, 255},
-                                   BALL_SPEED_X, BALL_SPEED_Y, 1);
+    _ball.push_back(std::make_shared<Ball>(
+        WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, BALL_RADIUS,
+        SDL_Color{0, 255, 0, 255}, BALL_SPEED_X, BALL_SPEED_Y, 1));
 
     // Création des briques
     for (int i = 0; i < BRICKS_COUNT; i++) {
-
         int x = (i % BRICKS_PER_ROW) * (BRICK_WIDTH + BRICKS_DISTANCE);
         int y = (i / BRICKS_PER_ROW) * (BRICK_HEIGHT + BRICKS_DISTANCE) + 50;
 
         int resistance = rand() % 3 + 1;
-        bool containsBall = rand() % 2;
+        int randomBall = rand() % 100;
+        bool containsBall = randomBall > 70 ? 1 : 0;
 
         SDL_Color color;
         switch (resistance) {
@@ -122,12 +122,41 @@ void Game::handleEvents() {
 
 void Game::update() {
 
-    _ball->move(WINDOW_WIDTH, WINDOW_HEIGHT);
-    _ball->collideWithPlatform(_platform->getX(), _platform->getY(),
-                               _platform->getWidth(), _platform->getHeight());
-    if (_ball->getY() + _ball->getRadius() > WINDOW_HEIGHT) {
+    for (auto &ball : _ball) {
+        ball->move(WINDOW_WIDTH, WINDOW_HEIGHT);
+        ball->collideWithPlatform(_platform->getX(), _platform->getY(),
+                                  _platform->getWidth(),
+                                  _platform->getHeight());
+        if (ball->getY() + ball->getRadius() > WINDOW_HEIGHT) {
+
+            ball->setIsActive(false);
+            ball->setSpeedX(0);
+            ball->setSpeedY(0);
+            ball->setInvisible();
+            ball->setColor(SDL_Color{0, 0, 0, 255});
+            ball->draw(_renderer);
+        }
+    }
+
+    int count_balls_down = 0;
+    for (auto &ball : _ball) {
+        if (ball->getIsActive() == false)
+            count_balls_down++;
+    }
+    if (count_balls_down == _ball.size()) {
         _isRunning = false;
         std::cout << "PERDU !" << std::endl;
+    }
+
+    int count_bricks_destroyed = 0;
+    for (auto &brick : _bricks) {
+        if (brick->getDestroyed() == true)
+            count_bricks_destroyed++;
+    }
+
+    if (count_bricks_destroyed == _bricks.size()) {
+        _isRunning = false;
+        std::cout << "GAGNE !" << std::endl;
     }
 
     checkBallBrickCollision();
@@ -138,7 +167,10 @@ void Game::render() {
     SDL_RenderClear(_renderer);
 
     _platform->draw(_renderer);
-    _ball->draw(_renderer);
+
+    for (auto &ball : _ball) {
+        ball->draw(_renderer);
+    }
 
     for (auto &brick : _bricks) {
         brick->draw(_renderer);
@@ -155,16 +187,28 @@ void Game::checkBallBrickCollision() {
         if (brick->getDestroyed() == true)
             continue;
 
-        if (_ball->collideWithBrick(brick->getX(), brick->getY(),
-                                    brick->getWidth(), brick->getHeight())) {
+        for (auto &ball : _ball) {
+            if (ball->getIsActive() == false)
+                continue;
 
-            brick->setResistance(brick->getResistance() - 1);
-            if (brick->getResistance() == 0) {
-                brick->setDestroyed(true);
-                brick->setInvisible();
-                brick->draw(_renderer);
+            if (ball->collideWithBrick(brick->getX(), brick->getY(),
+                                       brick->getWidth(), brick->getHeight())) {
+
+                brick->setResistance(brick->getResistance() - 1);
+                if (brick->getResistance() == 0) {
+                    brick->setDestroyed(true);
+                    brick->setInvisible();
+                    brick->draw(_renderer);
+                    if (brick->getContainsBall() == 1) {
+                        _ball.push_back(std::make_shared<Ball>(
+                            brick->getX(), brick->getY(), BALL_RADIUS,
+                            SDL_Color{0, 255, 0, 255}, BALL_SPEED_X,
+                            BALL_SPEED_Y, 1));
+                        break;
+                    }
+                }
+                brick->changeColor(_renderer);
             }
-            brick->changeColor(_renderer);
         }
     }
 }

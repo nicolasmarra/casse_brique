@@ -40,7 +40,7 @@ class Game {
     SDL_Window *_window;
     SDL_Renderer *_renderer;
     std::shared_ptr<Platform> _platform;
-    std::shared_ptr<Ball> _ball;
+    std::vector<std::shared_ptr<Ball>> _ball;
     std::vector<std::shared_ptr<Brick>> _bricks;
 };
 

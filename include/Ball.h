@@ -15,11 +15,13 @@ class Ball : public GameObject {
     double getSpeedX() const;
     double getSpeedY() const;
     int getResistance() const;
+    bool getIsActive() const;
 
     // Setters
     void setSpeedX(double speedX);
     void setSpeedY(double speedY);
     void setResistance(int resistance);
+    void setIsActive(bool isActive);
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;
@@ -32,10 +34,13 @@ class Ball : public GameObject {
     bool collideWithBrick(double brickX, double brickY, double brickWidth,
                           double brickHeight);
 
+    void setInvisible();
+
   private:
     double _speedX;
     double _speedY;
     int _resistance;
+    bool _isActive = true;
 };
 
 #endif // BALL_H

@@ -84,3 +84,9 @@ bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
 
     return false;
 }
+
+bool Ball::getIsActive() const { return _isActive; }
+
+void Ball::setIsActive(bool isActive) { _isActive = isActive; }
+
+void Ball::setInvisible() { setRadius(0); }
