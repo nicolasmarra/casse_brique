@@ -11,8 +11,9 @@ void Brick::setContainsBall(int containsBall) { _containsBall = containsBall; }
 void Brick::draw(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, getColor().r, getColor().g, getColor().b,
                            getColor().a);
-    SDL_Rect rect = {(int)getX(), (int)getY(), (int)getWidth(),
-                     (int)getHeight()};
+    SDL_Rect rect = {static_cast<int>(getX()), static_cast<int>(getY()),
+                     static_cast<int>(getWidth()),
+                     static_cast<int>(getHeight())};
     SDL_RenderFillRect(renderer, &rect);
 }
 
