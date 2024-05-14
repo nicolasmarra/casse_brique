@@ -3,6 +3,8 @@
 
 #include "GameObject.h"
 
+enum BrickType { RECTANGLE, TRIANGLE, HEXAGON };
+
 class Brick : public GameObject {
 
   public:
@@ -23,14 +25,20 @@ class Brick : public GameObject {
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;
+
     void changeColor(SDL_Renderer *renderer);
     bool collideWithBall(double ballX, double ballY, double ballRadius);
     void setInvisible();
 
   private:
+    void drawRectangle(SDL_Renderer *renderer);
+    void drawTriangle(SDL_Renderer *renderer);
+    void drawHexagon(SDL_Renderer *renderer);
+
     int _resistance;
     bool _containsBall;
     bool _isdestroyed = false;
+    BrickType _type = RECTANGLE;
 };
 
 #endif // BRICK_H

@@ -49,14 +49,19 @@ void Ball::collideWithPlatform(double platformX, double platformY,
         getY() + getRadius() >= platformY &&
         getY() - getRadius() <= platformY + platformHeight) {
 
+        // Vérifier si la balle touche le haut de la plateforme
         if (getY() + getRadius() >= platformY &&
-            getY() - getRadius() <= platformY + platformHeight) {
-            _speedY *= -1;
+            getY() - getRadius() <= platformY + platformHeight &&
+            getY() - getRadius() <= platformY) {
+
+            _speedY *= -1; // Inverser la direction verticale de la balle
         }
 
+        // à revoir
+        // Gérer le rebondissement de la balle sur les côtés de la plateforme
         if (getX() + getRadius() >= platformX &&
             getX() - getRadius() <= platformX + platformWidth) {
-            _speedX *= -1;
+            _speedX *= -1; // Inverser la direction horizontale de la balle
         }
     }
 }

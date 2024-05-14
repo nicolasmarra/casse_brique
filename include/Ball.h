@@ -2,6 +2,7 @@
 #define BALL_H
 
 #include "GameObject.h"
+#include <cmath>
 
 class Ball : public GameObject {
 
