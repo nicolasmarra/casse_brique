@@ -45,15 +45,16 @@ void Ball::collideWithPlatform(double platformX, double platformY,
                                double platformWidth, double platformHeight) {
 
     
-    double ballCenterX = getX();
-    double ballCenterY = getY();
-    double platformCenterX = platformX + platformWidth / 2.0;
-    double platformCenterY = platformY + platformHeight / 2.0;
-
+    
     if (ballCenterX + getRadius() >= platformX &&
         ballCenterX - getRadius() <= platformX + platformWidth &&
         ballCenterY + getRadius() >= platformY &&
         ballCenterY - getRadius() <= platformY + platformHeight) {
+
+        double ballCenterX = getX();
+        double ballCenterY = getY();
+        double platformCenterX = platformX + platformWidth / 2.0;
+        double platformCenterY = platformY + platformHeight / 2.0;
 
         double dx = ballCenterX - platformCenterX;
         double dy = ballCenterY - platformCenterY;
@@ -64,21 +65,12 @@ void Ball::collideWithPlatform(double platformX, double platformY,
         // Inverser l'angle pour le rebond
         double newAngle = M_PI - angle;
 
-        // Calcul de la nouvelle vitesse horizontale et verticale
+        // Calcul vitesse horizontale et verticale
         double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
         
-        if (ballCenterY + getRadius() >= platformY &&
-            ballCenterY - getRadius() <= platformY + platformHeight &&
-            ballCenterY - getRadius() <= platformY) {
-
-            setSpeedY(sin(newAngle) * speed);
-        }
-
-        // Gérer le rebondissement de la balle sur les côtés de la plateforme
-        if (ballCenterX + getRadius() >= platformX &&
-            ballCenterX - getRadius() <= platformX + platformWidth) {
-            setSpeedX(cos(newAngle) * speed);
-        }
+        setSpeedY(sin(newAngle) * speed);
+        setSpeedX(cos(newAngle) * speed);
+        
     }
 }
 
@@ -104,12 +96,12 @@ bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
             // Inverser l'angle pour le rebond
             double newAngle = M_PI - angle;
 
-            // Calcul de la nouvelle vitesse horizontale et verticale
+            // Calcul nouvelle vitesse
             double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
             setSpeedX(cos(newAngle) * speed);
             setSpeedY(sin(newAngle) * speed);
 
-            return true; // La balle a bien collisionné avec la brique
+            return true; // La balle a frappé la brique
                 
 
         /*
