@@ -44,20 +44,41 @@ void Ball::move(int windowWidth, int windowHeight) {
 void Ball::collideWithPlatform(double platformX, double platformY,
                                double platformWidth, double platformHeight) {
 
-    if (getX() + getRadius() >= platformX &&
-        getX() - getRadius() <= platformX + platformWidth &&
-        getY() + getRadius() >= platformY &&
-        getY() - getRadius() <= platformY + platformHeight) {
+    
+    double ballCenterX = getX();
+    double ballCenterY = getY();
+    double platformCenterX = platformX + platformWidth / 2.0;
+    double platformCenterY = platformY + platformHeight / 2.0;
 
-        double angle = atan2(getSpeedX(), getSpeedY());
+    if (ballCenterX + getRadius() >= platformX &&
+        ballCenterX - getRadius() <= platformX + platformWidth &&
+        ballCenterY + getRadius() >= platformY &&
+        ballCenterY - getRadius() <= platformY + platformHeight) {
 
-        double newAngle = M_PI - angle; 
+        double dx = ballCenterX - platformCenterX;
+        double dy = ballCenterY - platformCenterY;
 
-        // Calculer la nouvelle vitesse horizontale et verticale
+        // Calcul de l'angle d'incidence entre la balle et la plateforme
+        double angle = atan2(dy, dx);
+
+        // Inverser l'angle pour le rebond
+        double newAngle = M_PI - angle;
+
+        // Calcul de la nouvelle vitesse horizontale et verticale
         double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
         
-        setSpeedX(cos(newAngle) * speed);
-        setSpeedY(sin(newAngle) * speed);
+        if (ballCenterY + getRadius() >= platformY &&
+            ballCenterY - getRadius() <= platformY + platformHeight &&
+            ballCenterY - getRadius() <= platformY) {
+
+            setSpeedY(sin(newAngle) * speed);
+        }
+
+        // Gérer le rebondissement de la balle sur les côtés de la plateforme
+        if (ballCenterX + getRadius() >= platformX &&
+            ballCenterX - getRadius() <= platformX + platformWidth) {
+            setSpeedX(cos(newAngle) * speed);
+        }
     }
 }
 
@@ -69,16 +90,52 @@ bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
         getY() + getRadius() >= brickY &&
         getY() - getRadius() <= brickY + brickHeight) {
 
+            double ballCenterX = getX();
+            double ballCenterY = getY();
+            double brickCenterX = brickX + brickWidth / 2.0;
+            double brickCenterY = brickY + brickHeight / 2.0;
+
+            double dx = ballCenterX - brickCenterX;
+            double dy = ballCenterY - brickCenterY;
+
+            // Calcul de l'angle d'incidence entre la balle et la brique
+            double angle = atan2(dy, dx);
+
+            // Inverser l'angle pour le rebond
+            double newAngle = M_PI - angle;
+
+            // Calcul de la nouvelle vitesse horizontale et verticale
+            double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
+            setSpeedX(cos(newAngle) * speed);
+            setSpeedY(sin(newAngle) * speed);
+
+            return true; // La balle a bien collisionné avec la brique
+                
+
+        /*
         double angle = atan2(getSpeedX(), getSpeedY());
 
         double newAngle = M_PI - angle; 
 
         double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
         
-        setSpeedX(cos(newAngle) * speed);
-        setSpeedY(sin(newAngle) * speed);
+        if (getY() + getRadius() >= brickY &&
+            getY() - getRadius() <= brickY + brickHeight &&
+            getY() - getRadius() <= brickY) {
+            
 
+            setSpeedY(sin(newAngle) * speed);
+    
+        }
+
+        // à revoir
+        // Gérer le rebondissement de la balle sur les côtés de la plateforme
+        if (getX() + getRadius() >= brickX &&
+            getX() - getRadius() <= brickX + brickWidth) {
+            setSpeedX(cos(newAngle) * speed);
+        }
       return true;
+      */
     }
 
     return false;

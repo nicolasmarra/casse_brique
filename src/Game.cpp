@@ -83,19 +83,22 @@ void Game::init() {
         SDL_Color color;
         switch (resistance) {
         case 1:
+             // Couleur rouge pour une résistance de 1
             color = SDL_Color{255, 0, 0, 255};
             break;
         case 2:
+             // Couleur verte pour une résistance de 2
             color = SDL_Color{0, 255, 0, 255};
             break;
         case 3:
+            // Couleur bleue pour une résistance de 3
             color = SDL_Color{0, 0, 255, 255};
             break;
         }
 
         _bricks.push_back(
             std::make_shared<Brick>(x, y, BRICK_WIDTH, BRICK_HEIGHT, color,
-                                    resistance, containsBall, HEXAGON));
+                                    resistance, containsBall, RECTANGLE));
     }
 
     _isRunning = true;
@@ -200,13 +203,13 @@ void Game::checkBallBrickCollision() {
                     brick->setDestroyed(true);
                     brick->setInvisible();
                     brick->draw(_renderer);
-                    if (brick->getContainsBall() == 1) {
+                    /*if (brick->getContainsBall() == 1) {
                         _ball.push_back(std::make_shared<Ball>(
                             brick->getX(), brick->getY(), BALL_RADIUS,
                             SDL_Color{0, 255, 0, 255}, BALL_SPEED_X,
                             BALL_SPEED_Y, 1));
                         break;
-                    }
+                    }*/
                 }
                 brick->changeColor(_renderer);
             }
