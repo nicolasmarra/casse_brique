@@ -49,20 +49,15 @@ void Ball::collideWithPlatform(double platformX, double platformY,
         getY() + getRadius() >= platformY &&
         getY() - getRadius() <= platformY + platformHeight) {
 
-        // Vérifier si la balle touche le haut de la plateforme
-        if (getY() + getRadius() >= platformY &&
-            getY() - getRadius() <= platformY + platformHeight &&
-            getY() - getRadius() <= platformY) {
+        double angle = atan2(getSpeedX(), getSpeedY());
 
-            _speedY *= -1; // Inverser la direction verticale de la balle
-        }
+        double newAngle = M_PI - angle; 
 
-        // à revoir
-        // Gérer le rebondissement de la balle sur les côtés de la plateforme
-        if (getX() + getRadius() >= platformX &&
-            getX() - getRadius() <= platformX + platformWidth) {
-            _speedX *= -1; // Inverser la direction horizontale de la balle
-        }
+        // Calculer la nouvelle vitesse horizontale et verticale
+        double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
+        
+        setSpeedX(cos(newAngle) * speed);
+        setSpeedY(sin(newAngle) * speed);
     }
 }
 
@@ -74,17 +69,16 @@ bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
         getY() + getRadius() >= brickY &&
         getY() - getRadius() <= brickY + brickHeight) {
 
-        if (getY() + getRadius() >= brickY &&
-            getY() - getRadius() <= brickY + brickHeight) {
-            _speedY *= -1;
-            return true;
-        }
+        double angle = atan2(getSpeedX(), getSpeedY());
 
-        if (getX() + getRadius() >= brickX &&
-            getX() - getRadius() <= brickX + brickWidth) {
-            _speedX *= -1;
-            return true;
-        }
+        double newAngle = M_PI - angle; 
+
+        double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
+        
+        setSpeedX(cos(newAngle) * speed);
+        setSpeedY(sin(newAngle) * speed);
+
+      return true;
     }
 
     return false;

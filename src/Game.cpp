@@ -9,8 +9,8 @@
 #define PLATFORM_SPEED 10
 
 #define BALL_RADIUS 5
-#define BALL_SPEED_X 0.03
-#define BALL_SPEED_Y 0.06
+#define BALL_SPEED_X 0.01
+#define BALL_SPEED_Y 0.03
 
 #define BRICK_WIDTH 59
 #define BRICK_HEIGHT 15

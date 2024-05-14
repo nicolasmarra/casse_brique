@@ -34,7 +34,7 @@ class Ball : public GameObject {
 
     bool collideWithBrick(double brickX, double brickY, double brickWidth,
                           double brickHeight);
-
+    
     void setInvisible();
 
   private:
