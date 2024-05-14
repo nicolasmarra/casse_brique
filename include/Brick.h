@@ -2,6 +2,7 @@
 #define BRICK_H
 
 #include "GameObject.h"
+#include <vector>
 
 enum BrickType { RECTANGLE, TRIANGLE, HEXAGON };
 
@@ -9,19 +10,21 @@ class Brick : public GameObject {
 
   public:
     Brick(double x, double y, double width, double height, SDL_Color color,
-          int resistance, bool containsBall)
+          int resistance, bool containsBall, BrickType type = RECTANGLE)
         : GameObject(x, y, width, height, color), _resistance(resistance),
-          _containsBall(containsBall){};
+          _containsBall(containsBall), _type(type){};
 
     // Getters
     int getResistance() const;
     int getContainsBall() const;
-    bool getDestroyed() const { return _isdestroyed; }
+    bool getDestroyed() const;
+    BrickType getType() const;
 
     // Setters
     void setResistance(int resistance);
     void setContainsBall(int containsBall);
-    void setDestroyed(bool destroyed) { _isdestroyed = destroyed; }
+    void setDestroyed(bool destroyed);
+    void setType(BrickType type);
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;

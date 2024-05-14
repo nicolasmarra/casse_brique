@@ -93,8 +93,9 @@ void Game::init() {
             break;
         }
 
-        _bricks.push_back(std::make_shared<Brick>(
-            x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance, containsBall));
+        _bricks.push_back(
+            std::make_shared<Brick>(x, y, BRICK_WIDTH, BRICK_HEIGHT, color,
+                                    resistance, containsBall, HEXAGON));
     }
 
     _isRunning = true;
