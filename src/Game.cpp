@@ -136,12 +136,9 @@ void Game::update() {
             ball->setColor(SDL_Color{0, 0, 0, 255});
             ball->draw(_renderer);
             if (getLives() > 0) {
-                int count_balls_down = 0;
-                for (auto &ball : _ball) {
-                    if (ball->getIsActive() == false)
-                        count_balls_down++;
-                }
-                if (count_balls_down == _ball.size()) {
+
+                if (isAllBallDown()) {
+
                     _ball.push_back(std::make_shared<Ball>(
                         WINDOW_WIDTH / 2, getPosition_balle(), BALL_RADIUS,
                         SDL_Color{0, 255, 0, 255}, BALL_SPEED_X, BALL_SPEED_Y));
@@ -150,12 +147,7 @@ void Game::update() {
         }
     }
 
-    int count_balls_down = 0;
-    for (auto &ball : _ball) {
-        if (ball->getIsActive() == false)
-            count_balls_down++;
-    }
-    if (count_balls_down == _ball.size()) {
+    if (isAllBallDown()) {
         if (getLives() == 0) {
             _isRunning = false;
             std::cout << "PERDU !" << std::endl;
@@ -297,9 +289,8 @@ void Game::loadBricksFromFile(const std::string &filename) {
                 _bricks.push_back(std::make_shared<Brick>(
                     x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance,
                     containsBall, containsPowerUp, brickType));
-
-                x += BRICK_WIDTH + BRICKS_DISTANCE;
             }
+            x += BRICK_WIDTH + BRICKS_DISTANCE;
         }
         y += BRICK_HEIGHT + BRICKS_DISTANCE;
         setPosition_balle(y);
@@ -386,4 +377,16 @@ void Game::drawLives() {
     std::string livesText = "Vies: " + std::to_string(getLives());
     drawText(livesText, WINDOW_WIDTH - 100, 10, 20,
              SDL_Color{255, 255, 255, 255});
+}
+
+bool Game::isAllBallDown() {
+    int count_balls_down = 0;
+    for (auto &ball : _ball) {
+        if (ball->getIsActive() == false)
+            count_balls_down++;
+    }
+    if (count_balls_down == _ball.size())
+        return true;
+
+    return false;
 }

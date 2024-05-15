@@ -54,6 +54,8 @@ class Game {
     void drawText(const std::string &text, int x, int y, int size,
                   SDL_Color color);
 
+    bool isAllBallDown();
+
   private:
     void init(std::string configuration);
     void handleEvents();
