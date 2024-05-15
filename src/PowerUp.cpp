@@ -24,6 +24,8 @@ void PowerUp::draw(SDL_Renderer *renderer) {
 
 void PowerUp::move(int windowWidth, int windowHeight) {
 
+    if (!_isActive && _isUsed)
+        return;
     setX(getX() + _speedX);
     setY(getY() + _speedY);
 
@@ -33,6 +35,9 @@ void PowerUp::move(int windowWidth, int windowHeight) {
 
     if (getY() - getRadius() < 0 || getY() + getRadius() > windowHeight) {
         _speedY *= -1;
+        setInvisible();
+        setIsActive(false);
+        setIsUsed(true);
     }
 }
 

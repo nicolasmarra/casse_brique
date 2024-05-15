@@ -174,24 +174,30 @@ void Game::update() {
         if (powerUp->getIsActive() || powerUp->getIsUsed()) {
             continue;
         }
+
         if (powerUp->collideWithPlatform(_platform->getX(), _platform->getY(),
                                          _platform->getWidth(),
                                          _platform->getHeight())) {
             powerUp->setInvisible();
             powerUp->draw(_renderer);
+            powerUp->setX(WINDOW_HEIGHT - 50);
             applyPowerUp(powerUp);
         }
     }
 
     for (auto &powerUp : _powerUps) {
-        if (powerUp->getIsActive()) {
-            if (powerUp->getHasDuration()) {
+
+        if (powerUp->getIsActive() && powerUp->getIsUsed() == false) {
+            std::cout << "Duration : " << powerUp->getDuration() << std::endl;
+            if (powerUp->getHasDuration() >= 0) {
                 powerUp->setDuration(powerUp->getDuration() - 1);
-                if (powerUp->getDuration() == 0) {
+                if (powerUp->getDuration() <= 0) {
                     desapplyPowerUp(powerUp);
                 }
             }
         }
+        std::cout << "IsActive : " << powerUp->getIsActive() << std::endl;
+        std::cout << "IsUsed : " << powerUp->getIsUsed() << std::endl;
     }
 }
 
@@ -256,6 +262,7 @@ void Game::checkBallBrickCollision() {
                         PowerUpType type = static_cast<PowerUpType>(
                             rand() % 6); // 6 types de power-ups
                         SDL_Color color;
+                        std::cout << "type : " << type << std::endl;
                         if (type == BONUS_INCREASE_PLATFORM_LENGTH ||
                             type == BONUS_INCREASE_PLATFORM_SPEED ||
                             type == BONUS_EXTRA_LIFE) {
@@ -274,7 +281,7 @@ void Game::checkBallBrickCollision() {
                             type == BONUS_INCREASE_PLATFORM_SPEED ||
                             type == MALUS_DECREASE_PLATFORM_SPEED) {
                             powerUp->setHasDuration(true);
-                            powerUp->setDuration(15000);
+                            powerUp->setDuration(1000);
                         }
 
                         _powerUps.push_back(powerUp);
@@ -454,11 +461,12 @@ bool Game::isAllBallDown() {
 }
 
 void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
-    std::cout << "Type de bonus : " << powerUp->getType() << std::endl;
     switch (powerUp->getType()) {
 
     case BONUS_INCREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() + 50);
+        if (_platform->getWidth() >= 300)
+            break;
+        _platform->setWidth(_platform->getWidth() + 80);
         break;
     case BONUS_INCREASE_PLATFORM_SPEED:
         _platform->setSpeed(_platform->getSpeed() + 2);
@@ -467,7 +475,9 @@ void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
         setLives(getLives() + 1);
         break;
     case MALUS_DECREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() - 50);
+        if (_platform->getWidth() <= 50)
+            break;
+        _platform->setWidth(_platform->getWidth() - 80);
         break;
     case MALUS_DECREASE_PLATFORM_SPEED:
         _platform->setSpeed(_platform->getSpeed() - 2);
@@ -487,7 +497,7 @@ void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
 void Game::desapplyPowerUp(std::shared_ptr<PowerUp> powerUp) {
     switch (powerUp->getType()) {
     case BONUS_INCREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() - 50);
+        _platform->setWidth(_platform->getWidth() - 80);
         break;
     case BONUS_INCREASE_PLATFORM_SPEED:
         _platform->setSpeed(_platform->getSpeed() - 2);
@@ -495,7 +505,7 @@ void Game::desapplyPowerUp(std::shared_ptr<PowerUp> powerUp) {
     case BONUS_EXTRA_LIFE:
         break;
     case MALUS_DECREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() + 50);
+        _platform->setWidth(_platform->getWidth() + 80);
         break;
     case MALUS_DECREASE_PLATFORM_SPEED:
         _platform->setSpeed(_platform->getSpeed() + 2);

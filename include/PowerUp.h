@@ -48,6 +48,7 @@ class PowerUp : public GameObject {
     int getDuration() const;
     bool getHasDuration() const;
     bool getIsUsed() const;
+
     // Setters
     void setSpeedX(double speedX);
     void setSpeedY(double speedY);
