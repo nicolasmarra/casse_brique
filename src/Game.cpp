@@ -9,8 +9,8 @@ const int PLATFORM_HEIGHT = 15;
 const int PLATFORM_SPEED = 10;
 
 const int BALL_RADIUS = 5;
-const double BALL_SPEED_X = 0.03;
-const double BALL_SPEED_Y = 0.03;
+const double BALL_SPEED_X = 0.08;
+const double BALL_SPEED_Y = 0.09;
 
 const int BRICK_WIDTH = 59;
 const int BRICK_HEIGHT = 15;
@@ -22,14 +22,13 @@ const int BRICKS_DISTANCE = 15;
 const int PROBABILITY_POWER_UP = 15;
 const int PROBABILITY_CONTAINS_BALL = 30;
 
-int position_balle = 0;
-
 Game::Game() : _isRunning(false), _window(nullptr), _renderer(nullptr) {}
 
 Game::~Game() { clean(); }
 
-void Game::run() {
-    init();
+void Game::run(std::string configuration) {
+
+    init(configuration);
     while (_isRunning) {
         handleEvents();
         update();
@@ -37,7 +36,7 @@ void Game::run() {
     }
 }
 
-void Game::init() {
+void Game::init(std::string configuration) {
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "Erreur SDL_Init : " << SDL_GetError() << std::endl;
@@ -57,6 +56,13 @@ void Game::init() {
         return;
     }
 
+    // Initialisation de SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "Erreur TTF_Init : " << TTF_GetError() << std::endl;
+        _isRunning = false;
+        return;
+    }
+
     // Création du renderer
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -67,52 +73,28 @@ void Game::init() {
         return;
     }
 
+    // showMenu();
+
     // Création de la plateforme et de la balle
     _platform = std::make_shared<Platform>(
         WINDOW_WIDTH / 2, WINDOW_HEIGHT - 20, PLATFORM_WIDTH, PLATFORM_HEIGHT,
         SDL_Color{255, 255, 0, 255}, PLATFORM_SPEED);
 
     // Création des briques
-    loadBricksFromFile("../test/test1.txt");
+    setPosition_balle(WINDOW_HEIGHT / 2);
+    if (configuration == "rectangle" || configuration == "RECTANGLE") {
+        createBricks(RECTANGLE);
+    } else if (configuration == "triangle" || configuration == "TRIANGLE") {
+        createBricks(TRIANGLE);
+    } else if (configuration == "hexagon" || configuration == "HEXAGON") {
+        createBricks(HEXAGON);
+    } else {
+        loadBricksFromFile(configuration);
+    }
 
     _ball.push_back(std::make_shared<Ball>(
-        WINDOW_WIDTH / 2, position_balle, BALL_RADIUS,
+        WINDOW_WIDTH / 2, getPosition_balle(), BALL_RADIUS,
         SDL_Color{0, 255, 0, 255}, BALL_SPEED_X, BALL_SPEED_Y));
-
-    /*for (int i = 0; i < BRICKS_COUNT; i++) {
-
-        int x = (i % BRICKS_PER_ROW) * (BRICK_WIDTH + BRICKS_DISTANCE);
-        int y = (i / BRICKS_PER_ROW) * (BRICK_HEIGHT + BRICKS_DISTANCE) +
-    50;
-
-        int resistance = rand() % 3 + 1;
-        bool containsBall = rand() % 100 < PROBABILITY_CONTAINS_BALL ? 1 :
-    0;
-
-        SDL_Color color;
-        switch (resistance) {
-        case 1:
-            // Couleur rouge pour une résistance de 1
-            color = SDL_Color{255, 0, 0, 255};
-            break;
-        case 2:
-            // Couleur verte pour une résistance de 2
-            color = SDL_Color{0, 255, 0, 255};
-            break;
-        case 3:
-            // Couleur bleue pour une résistance de 3
-            color = SDL_Color{0, 0, 255, 255};
-            break;
-        }
-        bool containsPowerUp = false;
-        if (containsBall == false) {
-            containsPowerUp = rand() % 100 < PROBABILITY_CONTAINS_BALL ? 1 :
-    0;
-        }
-        _bricks.push_back(std::make_shared<Brick>(
-            x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance,
-    containsBall, containsPowerUp, HEXAGON));
-    }*/
 
     _isRunning = true;
 }
@@ -138,7 +120,6 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-
     for (auto &ball : _ball) {
         ball->move(WINDOW_WIDTH, WINDOW_HEIGHT);
         ball->collideWithPlatform(_platform->getX(), _platform->getY(),
@@ -193,10 +174,15 @@ void Game::render() {
         brick->draw(_renderer);
     }
 
+    drawScore(); // Afficher le score
+
     SDL_RenderPresent(_renderer);
 }
 
-void Game::clean() { SDL_Quit(); }
+void Game::clean() {
+    SDL_Quit();
+    TTF_Quit();
+}
 
 void Game::checkBallBrickCollision() {
     for (auto &brick : _bricks) {
@@ -212,6 +198,8 @@ void Game::checkBallBrickCollision() {
                                        brick->getWidth(), brick->getHeight())) {
                 brick->setResistance(brick->getResistance() - 1);
                 if (brick->getResistance() == 0) {
+                    setScore(getScore() + 10);
+                    brick->setDestroyed(true);
                     brick->setInvisible();
                     brick->draw(_renderer);
                     if (brick->getContainsBall() == 1) {
@@ -226,7 +214,6 @@ void Game::checkBallBrickCollision() {
                     }
                 }
                 brick->changeColor(_renderer);
-                brick->setDestroyed(true);
             }
         }
     }
@@ -297,8 +284,82 @@ void Game::loadBricksFromFile(const std::string &filename) {
             }
         }
         y += BRICK_HEIGHT + BRICKS_DISTANCE;
-        position_balle = y;
+        setPosition_balle(y);
     }
 
     file.close();
+}
+
+void Game::drawScore() {
+    std::string scoreText = "Score: " + std::to_string(getScore());
+    drawText(scoreText, 10, 10, 20, SDL_Color{255, 255, 255, 255});
+}
+
+void Game::drawText(const std::string &text, int x, int y, int size,
+                    SDL_Color color) {
+    TTF_Font *font = TTF_OpenFont("../assets/arial.ttf", size);
+    if (font == nullptr) {
+        std::cerr << "Erreur TTF_OpenFont : " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    if (surface == nullptr) {
+        std::cerr << "Erreur TTF_RenderText_Solid : " << TTF_GetError()
+                  << std::endl;
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+    if (texture == nullptr) {
+        std::cerr << "Erreur SDL_CreateTextureFromSurface : " << SDL_GetError()
+                  << std::endl;
+        SDL_FreeSurface(surface);
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Rect rect = {x, y, surface->w, surface->h};
+    SDL_RenderCopy(_renderer, texture, nullptr, &rect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+    TTF_CloseFont(font);
+}
+
+void Game::createBricks(BrickType type) {
+    int x;
+    int y;
+    for (int i = 0; i < BRICKS_COUNT; i++) {
+
+        x = (i % BRICKS_PER_ROW) * (BRICK_WIDTH + BRICKS_DISTANCE);
+        y = (i / BRICKS_PER_ROW) * (BRICK_HEIGHT + BRICKS_DISTANCE) + 50;
+
+        int resistance = rand() % 3 + 1;
+        bool containsBall = rand() % 100 < PROBABILITY_CONTAINS_BALL ? 1 : 0;
+
+        SDL_Color color;
+        switch (resistance) {
+        case 1:
+            // Couleur rouge pour une résistance de 1
+            color = SDL_Color{255, 0, 0, 255};
+            break;
+        case 2:
+            // Couleur verte pour une résistance de 2
+            color = SDL_Color{0, 255, 0, 255};
+            break;
+        case 3:
+            // Couleur bleue pour une résistance de 3
+            color = SDL_Color{0, 0, 255, 255};
+            break;
+        }
+        bool containsPowerUp = false;
+        if (containsBall == false) {
+            containsPowerUp = rand() % 100 < PROBABILITY_CONTAINS_BALL ? 1 : 0;
+        }
+        _bricks.push_back(std::make_shared<Brick>(
+            x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance, containsBall,
+            containsPowerUp, type));
+    }
 }

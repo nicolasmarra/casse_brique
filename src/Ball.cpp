@@ -1,6 +1,5 @@
 #include "Ball.h"
 #include <iostream>
-
 double Ball::getSpeedX() const { return _speedX; }
 
 double Ball::getSpeedY() const { return _speedY; }

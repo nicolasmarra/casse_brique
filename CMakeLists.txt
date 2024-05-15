@@ -8,9 +8,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 find_package(SDL2_ttf REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS}/SDL2_ttf)
+include_directories(${SDL2_TTF_INCLUDE_DIRS})
 
-# Liste des fichiers source du projet (ajoutez les fichiers .cpp des classes ici)
+# Liste des fichiers source du projet
 set(SOURCES 
     src/main.cpp
     src/Game.cpp
@@ -27,14 +27,15 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Inclusion des répertoires d'en-tête
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${SDL2_INCLUDE_DIRS}
-    include  # Ajoutez le répertoire include pour inclure les fichiers d'en-tête de vos classes
+    ${SDL2_TTF_INCLUDE_DIRS}  
+    include  
 )
 
 # Ajout des bibliothèques
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     ${SDL2_LIBRARIES}
+    ${SDL2_TTF_LIBRARIES} 
 )
-
 
 # Copie des ressources vers le répertoire de construction
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
