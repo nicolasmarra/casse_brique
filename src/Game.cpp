@@ -170,10 +170,11 @@ void Game::update() {
     checkBallBrickCollision();
 
     for (auto &powerUp : _powerUps) {
-        powerUp->move(WINDOW_WIDTH, WINDOW_HEIGHT);
-        if (powerUp->getIsActive() || powerUp->getIsUsed()) {
+
+        if (powerUp->getIsActive())
             continue;
-        }
+
+        powerUp->move(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         if (powerUp->collideWithPlatform(_platform->getX(), _platform->getY(),
                                          _platform->getWidth(),
@@ -183,21 +184,6 @@ void Game::update() {
             powerUp->setX(WINDOW_HEIGHT - 50);
             applyPowerUp(powerUp);
         }
-    }
-
-    for (auto &powerUp : _powerUps) {
-
-        if (powerUp->getIsActive() && powerUp->getIsUsed() == false) {
-            std::cout << "Duration : " << powerUp->getDuration() << std::endl;
-            if (powerUp->getHasDuration() >= 0) {
-                powerUp->setDuration(powerUp->getDuration() - 1);
-                if (powerUp->getDuration() <= 0) {
-                    desapplyPowerUp(powerUp);
-                }
-            }
-        }
-        std::cout << "IsActive : " << powerUp->getIsActive() << std::endl;
-        std::cout << "IsUsed : " << powerUp->getIsUsed() << std::endl;
     }
 }
 
@@ -256,6 +242,7 @@ void Game::checkBallBrickCollision() {
                         break;
                     }
                     if (brick->getContainsPowerUp() == 1) {
+
                         // Gestion des power-ups
 
                         std::cout << "power up" << std::endl;
@@ -264,25 +251,16 @@ void Game::checkBallBrickCollision() {
                         SDL_Color color;
                         std::cout << "type : " << type << std::endl;
                         if (type == BONUS_INCREASE_PLATFORM_LENGTH ||
-                            type == BONUS_INCREASE_PLATFORM_SPEED ||
                             type == BONUS_EXTRA_LIFE) {
                             // Couleur blanche pour les bonus
                             color = SDL_Color{255, 255, 255, 255};
                         } else {
-                            // Couleur grise pour les malus
                             // couleur rouge pour les malus
                             color = SDL_Color{255, 0, 0, 255};
                         }
                         auto powerUp = std::make_shared<PowerUp>(
                             brick->getX(), brick->getY(), BALL_RADIUS, color, 0,
                             0.08, type);
-
-                        if (type == BONUS_INCREASE_PLATFORM_LENGTH ||
-                            type == BONUS_INCREASE_PLATFORM_SPEED ||
-                            type == MALUS_DECREASE_PLATFORM_SPEED) {
-                            powerUp->setHasDuration(true);
-                            powerUp->setDuration(1000);
-                        }
 
                         _powerUps.push_back(powerUp);
                     }
@@ -466,21 +444,18 @@ void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
     case BONUS_INCREASE_PLATFORM_LENGTH:
         if (_platform->getWidth() >= 300)
             break;
-        _platform->setWidth(_platform->getWidth() + 80);
-        break;
-    case BONUS_INCREASE_PLATFORM_SPEED:
-        _platform->setSpeed(_platform->getSpeed() + 2);
+        _platform->setWidth(_platform->getWidth() + 15);
         break;
     case BONUS_EXTRA_LIFE:
+        // Limiter le nombre de vies à 6
+        if (getLives() >= 6)
+            break;
         setLives(getLives() + 1);
         break;
     case MALUS_DECREASE_PLATFORM_LENGTH:
         if (_platform->getWidth() <= 50)
             break;
-        _platform->setWidth(_platform->getWidth() - 80);
-        break;
-    case MALUS_DECREASE_PLATFORM_SPEED:
-        _platform->setSpeed(_platform->getSpeed() - 2);
+        _platform->setWidth(_platform->getWidth() - 15);
         break;
     case MALUS_LOSE_LIFE:
         if (getLives() > 0) {
@@ -492,27 +467,6 @@ void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
         break;
     }
     powerUp->setIsActive(true);
-}
-
-void Game::desapplyPowerUp(std::shared_ptr<PowerUp> powerUp) {
-    switch (powerUp->getType()) {
-    case BONUS_INCREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() - 80);
-        break;
-    case BONUS_INCREASE_PLATFORM_SPEED:
-        _platform->setSpeed(_platform->getSpeed() - 2);
-        break;
-    case BONUS_EXTRA_LIFE:
-        break;
-    case MALUS_DECREASE_PLATFORM_LENGTH:
-        _platform->setWidth(_platform->getWidth() + 80);
-        break;
-    case MALUS_DECREASE_PLATFORM_SPEED:
-        _platform->setSpeed(_platform->getSpeed() + 2);
-        break;
-    case MALUS_LOSE_LIFE:
-        break;
-    }
-    powerUp->setIsActive(false);
-    powerUp->setIsUsed(true);
+    powerUp->setInvisible();
+    powerUp->draw(_renderer);
 }

@@ -69,17 +69,3 @@ void PowerUp::setInvisible() {
 PowerUpType PowerUp::getType() const { return _type; }
 
 void PowerUp::setType(PowerUpType type) { _type = type; }
-
-int PowerUp::getDuration() const { return _duration; }
-
-void PowerUp::setDuration(int duration) { _duration = duration; }
-
-bool PowerUp::getHasDuration() const { return _has_duration; }
-
-void PowerUp::setHasDuration(bool has_duration) {
-    _has_duration = has_duration;
-}
-
-bool PowerUp::getIsUsed() const { return _isUsed; }
-
-void PowerUp::setIsUsed(bool isUsed) { _isUsed = isUsed; }
