@@ -82,8 +82,8 @@ class PowerUp : public GameObject {
     void setInvisible();
 
   private:
-    double _speedX;
-    double _speedY;
+    double _speedX;    // The speed of the power up in the x direction
+    double _speedY;    // The speed of the power up in the y direction
     PowerUpType _type; // Type de power-up
     bool _isActive = false;
 };

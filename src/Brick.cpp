@@ -26,6 +26,7 @@ void Brick::draw(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, getColor().r, getColor().g, getColor().b,
                            getColor().a);
 
+    // On dessine la brique selon son type
     switch (getType()) {
     case RECTANGLE:
         drawRectangle(renderer);
@@ -76,6 +77,7 @@ void Brick::drawHexagon(SDL_Renderer *renderer) {
 
 void Brick::changeColor(SDL_Renderer *renderer) {
 
+    // On change la couleur de la brique selon sa résistance
     if (getResistance() == 1) {
         setColor(SDL_Color{255, 0, 0, 255});
     } else if (getResistance() == 2) {
@@ -86,40 +88,10 @@ void Brick::changeColor(SDL_Renderer *renderer) {
 }
 
 void Brick::setInvisible() {
+    // On rend la brique invisible en réduisant complétement sa taille
     setWidth(0);
     setHeight(0);
     // couleur noire
     SDL_Color color = {0, 0, 0, 255};
     setColor(color);
 }
-
-/*
-bool Brick::collideWithBall(double ballX, double ballY, double ballRadius) {
-
-    if (ballX + ballRadius >= getX() &&
-        ballX - ballRadius <= getX() + getWidth() &&
-        ballY + ballRadius >= getY() &&
-        ballY - ballRadius <= getY() + getHeight()) {
-
-        if (ballY + ballRadius >= getY() &&
-            ballY - ballRadius <= getY() + getHeight()) {
-            setResistance(getResistance() - 1);
-            if (getResistance() == 0) {
-
-                setDestroyed(true);
-                return true;
-            }
-        }
-
-        if (ballX + ballRadius >= getX() &&
-            ballX - ballRadius <= getX() + getWidth()) {
-            setResistance(getResistance() - 1);
-            if (getResistance() == 0) {
-
-                setDestroyed(true);
-                return true;
-            }
-        }
-    }
-}
-*/

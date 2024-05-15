@@ -66,31 +66,15 @@ class Ball : public GameObject {
 
     /**
      * @brief Collide the ball object with the brick
-     * @param BrickX The x coordinate of the brick
-     * @param BrickY The y coordinate of the brick
-     * @param windowWidth The width of the brick
-     * @param windowHeight The height of the brick
+     * @param brickX The x coordinate of the brick
+     * @param brickY The y coordinate of the brick
+     * @param brickWidth The width of the brick
+     * @param brickHeight The height of the brick
+     * @param type The type of the brick
+     * @return true if the ball object collides with the brick, false
      */
-
     bool collideWithBrick(double brickX, double brickY, double brickWidth,
                           double brickHeight, BrickType type);
-
-    bool collideWithRectangle(double rectangleX, double rectangleY,
-                              double rectangleWidth, double rectangleHeight);
-
-    bool collideWithTriangle(double triangleX, double triangleY,
-                             double triangleWidth, double triangleHeight);
-
-    bool pointInTriangle(SDL_Point pt, SDL_Point v1, SDL_Point v2,
-                         SDL_Point v3);
-
-    float sign(SDL_Point p1, SDL_Point p2, SDL_Point p3);
-
-    bool collideWithHexagon(double hexagonX, double hexagonY,
-                            double hexagonWidth, double hexagonHeight);
-
-    void calculateAngle(double brickX, double brickY, double brickWidth,
-                        double brickHeight);
 
     /**
      * @brief Set the ball object invisible
@@ -98,8 +82,73 @@ class Ball : public GameObject {
     void setInvisible();
 
   private:
-    double _speedX;
-    double _speedY;
+    /**
+     * @brief Collide the ball object with the rectangle
+     * @param rectangleX The x coordinate of the rectangle
+     * @param rectangleY The y coordinate of the rectangle
+     * @param rectangleWidth The width of the rectangle
+     * @param rectangleHeight The height of the rectangle
+     */
+
+    bool collideWithRectangle(double rectangleX, double rectangleY,
+                              double rectangleWidth, double rectangleHeight);
+
+    /**
+     * @brief Collide the ball object with the triangle
+     * @param triangleX The x coordinate of the triangle
+     * @param triangleY The y coordinate of the triangle
+     * @param triangleWidth The width of the triangle
+     * @param triangleHeight The height of the triangle
+     * @return true if the ball object collides with the triangle, false
+     *
+     */
+    bool collideWithTriangle(double triangleX, double triangleY,
+                             double triangleWidth, double triangleHeight);
+
+    /**
+     * @brief Check if a point is inside a triangle
+     * @param pt The point to check
+     * @param v1 The first vertex of the triangle
+     * @param v2 The second vertex of the triangle
+     * @param v3 The third vertex of the triangle
+     * @return true if the point is inside the triangle, false
+     */
+    bool pointInTriangle(SDL_Point pt, SDL_Point v1, SDL_Point v2,
+                         SDL_Point v3);
+
+    /**
+     * @brief Check if a point is inside a rectangle
+     * @param pt The point to check
+     * @param v1 The first vertex of the rectangle
+     * @param v2 The second vertex of the rectangle
+     * @param v3 The third vertex of the rectangle
+     * @param v4 The fourth vertex of the rectangle
+     * @return true if the point is inside the rectangle, false
+     */
+    float sign(SDL_Point p1, SDL_Point p2, SDL_Point p3);
+
+    /**
+     * @brief Collide the ball object with the hexagon
+     * @param hexagonX The x coordinate of the hexagon
+     * @param hexagonY The y coordinate of the hexagon
+     * @param hexagonWidth The width of the hexagon
+     * @param hexagonHeight The height of the hexagon
+     * @return true if the ball object collides with the hexagon, false
+     */
+    bool collideWithHexagon(double hexagonX, double hexagonY,
+                            double hexagonWidth, double hexagonHeight);
+
+    /**
+     * @brief Calculate the angle of the ball object
+     * @param brickX The x coordinate of the brick
+     * @param brickY The y coordinate of the brick
+     * @param brickWidth The width of the brick
+     * @param brickHeight The height of the brick
+     */
+    void calculateAngle(double brickX, double brickY, double brickWidth,
+                        double brickHeight);
+    double _speedX; // Speed of the ball in the x direction
+    double _speedY; // Speed of the ball in the y direction
     bool _isActive = true;
 };
 
