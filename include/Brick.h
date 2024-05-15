@@ -10,21 +10,25 @@ class Brick : public GameObject {
 
   public:
     Brick(double x, double y, double width, double height, SDL_Color color,
-          int resistance, bool containsBall, BrickType type = RECTANGLE)
+          int resistance, bool containsBall, bool containsPowerUp,
+          BrickType type = RECTANGLE)
         : GameObject(x, y, width, height, color), _resistance(resistance),
-          _containsBall(containsBall), _type(type){};
+          _containsBall(containsBall), _containsPowerUp(containsPowerUp),
+          _type(type){};
 
     // Getters
     int getResistance() const;
-    int getContainsBall() const;
+    bool getContainsBall() const;
     bool getDestroyed() const;
     BrickType getType() const;
+    bool getContainsPowerUp() const;
 
     // Setters
     void setResistance(int resistance);
     void setContainsBall(int containsBall);
     void setDestroyed(bool destroyed);
     void setType(BrickType type);
+    void setContainsPowerUp(bool containsPowerUp);
 
     // Methods
     virtual void draw(SDL_Renderer *renderer) override;
@@ -40,6 +44,7 @@ class Brick : public GameObject {
 
     int _resistance;
     bool _containsBall;
+    bool _containsPowerUp;
     bool _isdestroyed = false;
     BrickType _type = RECTANGLE;
 };

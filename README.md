@@ -5,10 +5,10 @@ Ce projet consiste à faire un remake du jeu classique de casse-briques, il sera
 ## Fonctionnalités
 
 - [x] Plateforme déplaçable au clavier ou à la souris.
-- [ ] Balle rebondissant en fonction de son angle d'impact.
+- [x] Balle rebondissant en fonction de son angle d'impact.
 - [x] Briques de différents types avec différentes résistances.
 - [ ] Bonus/malus, y compris le multi-balle.
-- [ ] Grilles chargées depuis un fichier ASCII.
+- [x] Grilles chargées depuis un fichier ASCII.
 
 
 ## Compilation et exécution

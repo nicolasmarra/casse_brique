@@ -2,7 +2,9 @@
 
 int Brick::getResistance() const { return _resistance; }
 
-int Brick::getContainsBall() const { return _containsBall; }
+bool Brick::getContainsBall() const { return _containsBall; }
+
+bool Brick::getContainsPowerUp() const { return _containsPowerUp; }
 
 bool Brick::getDestroyed() const { return _isdestroyed; }
 
@@ -11,6 +13,10 @@ BrickType Brick::getType() const { return _type; }
 void Brick::setResistance(int resistance) { _resistance = resistance; }
 
 void Brick::setContainsBall(int containsBall) { _containsBall = containsBall; }
+
+void Brick::setContainsPowerUp(bool containsPowerUp) {
+    _containsPowerUp = containsPowerUp;
+}
 
 void Brick::setDestroyed(bool destroyed) { _isdestroyed = destroyed; }
 

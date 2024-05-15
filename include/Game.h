@@ -4,7 +4,11 @@
 #include "Ball.h"
 #include "Brick.h"
 #include "Platform.h"
+#include "PowerUp.h"
+#include <fstream>
+#include <iostream>
 #include <memory>
+#include <sstream>
 #include <vector>
 
 class Game {
@@ -27,7 +31,10 @@ class Game {
 
     void setRenderer(SDL_Renderer *renderer) { _renderer = renderer; }
 
+    // Methods
     void checkBallBrickCollision();
+
+    void loadBricksFromFile(const std::string &filename);
 
   private:
     void init();

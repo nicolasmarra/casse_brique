@@ -5,13 +5,9 @@ double Ball::getSpeedX() const { return _speedX; }
 
 double Ball::getSpeedY() const { return _speedY; }
 
-int Ball::getResistance() const { return _resistance; }
-
 void Ball::setSpeedX(double speedX) { _speedX = speedX; }
 
 void Ball::setSpeedY(double speedY) { _speedY = speedY; }
-
-void Ball::setResistance(int resistance) { _resistance = resistance; }
 
 void Ball::draw(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, getColor().r, getColor().g, getColor().b,
@@ -44,90 +40,57 @@ void Ball::move(int windowWidth, int windowHeight) {
 void Ball::collideWithPlatform(double platformX, double platformY,
                                double platformWidth, double platformHeight) {
 
-    
-    
+    double ballCenterX = getX();
+    double ballCenterY = getY();
     if (ballCenterX + getRadius() >= platformX &&
         ballCenterX - getRadius() <= platformX + platformWidth &&
         ballCenterY + getRadius() >= platformY &&
         ballCenterY - getRadius() <= platformY + platformHeight) {
 
-        double ballCenterX = getX();
-        double ballCenterY = getY();
         double platformCenterX = platformX + platformWidth / 2.0;
         double platformCenterY = platformY + platformHeight / 2.0;
 
         double dx = ballCenterX - platformCenterX;
         double dy = ballCenterY - platformCenterY;
 
-        // Calcul de l'angle d'incidence entre la balle et la plateforme
         double angle = atan2(dy, dx);
 
-        // Inverser l'angle pour le rebond
         double newAngle = M_PI - angle;
 
-        // Calcul vitesse horizontale et verticale
-        double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
-        
+        double speed =
+            sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
+
         setSpeedY(sin(newAngle) * speed);
         setSpeedX(cos(newAngle) * speed);
-        
     }
 }
 
 bool Ball::collideWithBrick(double brickX, double brickY, double brickWidth,
                             double brickHeight) {
 
+    double ballCenterX = getX();
+    double ballCenterY = getY();
+    double brickCenterX = brickX + brickWidth / 2.0;
+    double brickCenterY = brickY + brickHeight / 2.0;
+
     if (getX() + getRadius() >= brickX &&
         getX() - getRadius() <= brickX + brickWidth &&
         getY() + getRadius() >= brickY &&
         getY() - getRadius() <= brickY + brickHeight) {
 
-            double ballCenterX = getX();
-            double ballCenterY = getY();
-            double brickCenterX = brickX + brickWidth / 2.0;
-            double brickCenterY = brickY + brickHeight / 2.0;
+        double dx = ballCenterX - brickCenterX;
+        double dy = ballCenterY - brickCenterY;
 
-            double dx = ballCenterX - brickCenterX;
-            double dy = ballCenterY - brickCenterY;
+        double angle = atan2(dy, dx);
 
-            // Calcul de l'angle d'incidence entre la balle et la brique
-            double angle = atan2(dy, dx);
+        double newAngle = M_PI - angle;
 
-            // Inverser l'angle pour le rebond
-            double newAngle = M_PI - angle;
+        double speed =
+            sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
+        setSpeedX(cos(newAngle) * speed);
+        setSpeedY(sin(newAngle) * speed);
 
-            // Calcul nouvelle vitesse
-            double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
-            setSpeedX(cos(newAngle) * speed);
-            setSpeedY(sin(newAngle) * speed);
-
-            return true; // La balle a frappé la brique
-                
-
-        /*
-        double angle = atan2(getSpeedX(), getSpeedY());
-
-        double newAngle = M_PI - angle; 
-
-        double speed = sqrt(getSpeedX() * getSpeedX() + getSpeedY() * getSpeedY());
-        
-        if (getY() + getRadius() >= brickY &&
-            getY() - getRadius() <= brickY + brickHeight &&
-            getY() - getRadius() <= brickY) {
-            
-
-            setSpeedY(sin(newAngle) * speed);
-    
-        }
-
-        // à revoir
-        // Gérer le rebondissement de la balle sur les côtés de la plateforme
-        if (getX() + getRadius() >= brickX &&
-            getX() - getRadius() <= brickX + brickWidth) {
-            setSpeedX(cos(newAngle) * speed);
-        }
-      return true;
-      */
+        return true; // La balle a frappé la brique
     }
 
     return false;
