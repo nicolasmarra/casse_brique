@@ -60,6 +60,8 @@ class Game {
 
     void desapplyPowerUp(std::shared_ptr<PowerUp> powerUp);
 
+    int getNumberOfBall(bool isActive);
+
   private:
     void init(std::string configuration);
     void handleEvents();

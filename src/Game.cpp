@@ -19,8 +19,8 @@ const int BRICKS_COUNT = 88;
 const int BRICKS_PER_ROW = 11;
 const int BRICKS_DISTANCE = 15;
 
-const int PROBABILITY_POWER_UP = 15;
-const int PROBABILITY_CONTAINS_BALL = 30;
+const int PROBABILITY_POWER_UP = 90;
+const int PROBABILITY_CONTAINS_BALL = 10;
 
 Game::Game() : _isRunning(false), _window(nullptr), _renderer(nullptr) {}
 
@@ -183,6 +183,7 @@ void Game::update() {
             powerUp->draw(_renderer);
             powerUp->setX(WINDOW_HEIGHT - 50);
             applyPowerUp(powerUp);
+            std::cout << "power up added" << std::endl;
         }
     }
 }
@@ -235,8 +236,23 @@ void Game::checkBallBrickCollision() {
                     brick->setInvisible();
                     brick->draw(_renderer);
                     if (brick->getContainsBall() == 1) {
+
+                        // Faire attention à la position de la brick, si c'est
+                        // très près du bord de la fenêtre, on augmente un peu
+                        // la nouvelle position de la balle
+
+                        if (getNumberOfBall(true) > 5) {
+                            break;
+                        }
+                        int x = brick->getX();
+                        if (x < 30) {
+                            x += 30;
+                        } else if (x > WINDOW_WIDTH - 30) {
+                            x -= 30;
+                        }
+
                         _ball.push_back(std::make_shared<Ball>(
-                            brick->getX(), brick->getY(), BALL_RADIUS,
+                            x, brick->getY(), BALL_RADIUS,
                             SDL_Color{0, 255, 0, 255}, BALL_SPEED_X,
                             BALL_SPEED_Y));
                         break;
@@ -247,9 +263,21 @@ void Game::checkBallBrickCollision() {
 
                         std::cout << "power up" << std::endl;
                         PowerUpType type = static_cast<PowerUpType>(
-                            rand() % 6); // 6 types de power-ups
+                            rand() % 4); // 4 types de power-ups
                         SDL_Color color;
-                        std::cout << "type : " << type << std::endl;
+                        // afficher le vrai type en fonction de la valeur
+                        if (type == BONUS_INCREASE_PLATFORM_LENGTH) {
+                            std::cout << "BONUS_INCREASE_PLATFORM_LENGTH"
+                                      << std::endl;
+                        } else if (type == BONUS_EXTRA_LIFE) {
+                            std::cout << "BONUS_EXTRA_LIFE" << std::endl;
+                        } else if (type == MALUS_DECREASE_PLATFORM_LENGTH) {
+                            std::cout << "MALUS_DECREASE_PLATFORM_LENGTH"
+                                      << std::endl;
+                        } else if (type == MALUS_LOSE_LIFE) {
+                            std::cout << "MALUS_LOSE_LIFE" << std::endl;
+                        }
+
                         if (type == BONUS_INCREASE_PLATFORM_LENGTH ||
                             type == BONUS_EXTRA_LIFE) {
                             // Couleur blanche pour les bonus
@@ -258,9 +286,16 @@ void Game::checkBallBrickCollision() {
                             // couleur rouge pour les malus
                             color = SDL_Color{255, 0, 0, 255};
                         }
+                        int x = brick->getX();
+                        if (x < 30) {
+                            x += 30;
+                        } else if (x > WINDOW_WIDTH - 30) {
+                            x -= 30;
+                        }
+
                         auto powerUp = std::make_shared<PowerUp>(
-                            brick->getX(), brick->getY(), BALL_RADIUS, color, 0,
-                            0.08, type);
+                            x, brick->getY(), BALL_RADIUS, color, 0, 0.08,
+                            type);
 
                         _powerUps.push_back(powerUp);
                     }
@@ -326,9 +361,8 @@ void Game::loadBricksFromFile(const std::string &filename) {
                 }
                 bool containsPowerUp = false;
                 if (containsBall == false) {
-                    // containsPowerUp =
-                    //     rand() % 100 < PROBABILITY_CONTAINS_BALL ? 1 : 0;
-                    containsPowerUp = true;
+                    containsPowerUp =
+                        rand() % 100 < PROBABILITY_POWER_UP ? 1 : 0;
                 }
 
                 _bricks.push_back(std::make_shared<Brick>(
@@ -410,9 +444,7 @@ void Game::createBricks(BrickType type) {
         }
         bool containsPowerUp = false;
         if (containsBall == false) {
-            // containsPowerUp = rand() % 100 < PROBABILITY_CONTAINS_BALL ?
-            // 1 : 0;
-            containsPowerUp = true;
+            containsPowerUp = rand() % 100 < PROBABILITY_POWER_UP ? 1 : 0;
         }
         _bricks.push_back(std::make_shared<Brick>(
             x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance, containsBall,
@@ -427,39 +459,41 @@ void Game::drawLives() {
 }
 
 bool Game::isAllBallDown() {
-    int count_balls_down = 0;
-    for (auto &ball : _ball) {
-        if (ball->getIsActive() == false)
-            count_balls_down++;
-    }
-    if (count_balls_down == _ball.size())
+
+    if (getNumberOfBall(false) == _ball.size())
         return true;
 
     return false;
 }
 
 void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
+
     switch (powerUp->getType()) {
 
     case BONUS_INCREASE_PLATFORM_LENGTH:
+        std::cout << "plateforme agrandie" << std::endl;
         if (_platform->getWidth() >= 300)
             break;
         _platform->setWidth(_platform->getWidth() + 15);
         break;
     case BONUS_EXTRA_LIFE:
+        std::cout << "vie gagnée" << std::endl;
         // Limiter le nombre de vies à 6
         if (getLives() >= 6)
             break;
         setLives(getLives() + 1);
         break;
     case MALUS_DECREASE_PLATFORM_LENGTH:
+        std::cout << "plateforme réduite" << std::endl;
         if (_platform->getWidth() <= 50)
             break;
         _platform->setWidth(_platform->getWidth() - 15);
+
         break;
     case MALUS_LOSE_LIFE:
         if (getLives() > 0) {
             setLives(getLives() - 1);
+            std::cout << "vie perdue" << std::endl;
         } else {
             _isRunning = false;
             std::cout << "PERDU !" << std::endl;
@@ -469,4 +503,13 @@ void Game::applyPowerUp(std::shared_ptr<PowerUp> powerUp) {
     powerUp->setIsActive(true);
     powerUp->setInvisible();
     powerUp->draw(_renderer);
+}
+
+int Game::getNumberOfBall(bool isActive) {
+    int count_balls = 0;
+    for (auto &ball : _ball) {
+        if (ball->getIsActive() == isActive)
+            count_balls++;
+    }
+    return count_balls;
 }

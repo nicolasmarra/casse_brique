@@ -36,7 +36,8 @@ class PowerUp : public GameObject {
      */
     PowerUp(double x, double y, double radius, SDL_Color color, double speedX,
             double speedY, PowerUpType type)
-        : GameObject(x, y, radius, color), _speedX(speedX), _speedY(speedY){};
+        : GameObject(x, y, radius, color), _speedX(speedX), _speedY(speedY),
+          _type(type){};
 
     // Getters
     double getSpeedX() const;
