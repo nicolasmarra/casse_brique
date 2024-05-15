@@ -25,6 +25,8 @@ class Game {
     SDL_Renderer *getRenderer() const { return _renderer; }
     int getScore() const { return _score; }
     int getPosition_balle() const { return _position_balle; }
+    int getLives() const { return _lives; }
+
     // Setters
 
     void setRunning(bool isRunning) { _isRunning = isRunning; }
@@ -39,12 +41,15 @@ class Game {
         _position_balle = position_balle;
     }
 
+    void setLives(int lives) { _lives = lives; }
     // Methods
     void checkBallBrickCollision();
 
     void loadBricksFromFile(const std::string &filename);
 
     void drawScore();
+
+    void drawLives();
 
     void drawText(const std::string &text, int x, int y, int size,
                   SDL_Color color);
@@ -60,6 +65,7 @@ class Game {
     bool _isRunning;
     int _position_balle;
     int _score = 0;
+    int _lives = 3;
     SDL_Window *_window;
     SDL_Renderer *_renderer;
     std::shared_ptr<Platform> _platform;

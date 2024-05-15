@@ -127,12 +127,26 @@ void Game::update() {
                                   _platform->getHeight());
         if (ball->getY() + ball->getRadius() > WINDOW_HEIGHT) {
 
+            setScore(getScore() - 5);
+            setLives(getLives() - 1);
             ball->setIsActive(false);
             ball->setSpeedX(0);
             ball->setSpeedY(0);
             ball->setInvisible();
             ball->setColor(SDL_Color{0, 0, 0, 255});
             ball->draw(_renderer);
+            if (getLives() > 0) {
+                int count_balls_down = 0;
+                for (auto &ball : _ball) {
+                    if (ball->getIsActive() == false)
+                        count_balls_down++;
+                }
+                if (count_balls_down == _ball.size()) {
+                    _ball.push_back(std::make_shared<Ball>(
+                        WINDOW_WIDTH / 2, getPosition_balle(), BALL_RADIUS,
+                        SDL_Color{0, 255, 0, 255}, BALL_SPEED_X, BALL_SPEED_Y));
+                }
+            }
         }
     }
 
@@ -142,8 +156,10 @@ void Game::update() {
             count_balls_down++;
     }
     if (count_balls_down == _ball.size()) {
-        _isRunning = false;
-        std::cout << "PERDU !" << std::endl;
+        if (getLives() == 0) {
+            _isRunning = false;
+            std::cout << "PERDU !" << std::endl;
+        }
     }
 
     int count_bricks_destroyed = 0;
@@ -175,7 +191,7 @@ void Game::render() {
     }
 
     drawScore(); // Afficher le score
-
+    drawLives(); // Afficher le nombre de vies
     SDL_RenderPresent(_renderer);
 }
 
@@ -212,6 +228,8 @@ void Game::checkBallBrickCollision() {
                     if (brick->getContainsPowerUp() == 1) {
                         // Gestion des power-ups
                     }
+                } else {
+                    setScore(getScore() + 1);
                 }
                 brick->changeColor(_renderer);
             }
@@ -362,4 +380,10 @@ void Game::createBricks(BrickType type) {
             x, y, BRICK_WIDTH, BRICK_HEIGHT, color, resistance, containsBall,
             containsPowerUp, type));
     }
+}
+
+void Game::drawLives() {
+    std::string livesText = "Vies: " + std::to_string(getLives());
+    drawText(livesText, WINDOW_WIDTH - 100, 10, 20,
+             SDL_Color{255, 255, 255, 255});
 }
