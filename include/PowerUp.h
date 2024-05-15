@@ -8,8 +8,10 @@
 enum PowerUpType {
     BONUS_INCREASE_PLATFORM_LENGTH,
     BONUS_INCREASE_PLATFORM_SPEED,
-    MALUS_RESET_LAST_ROW_BRICKS,
-    MALUS_DECREASE_PLATFORM_SPEED
+    BONUS_EXTRA_LIFE,
+    MALUS_DECREASE_PLATFORM_SPEED,
+    MALUS_DECREASE_PLATFORM_LENGTH,
+    MALUS_LOSE_LIFE
 };
 
 /**
@@ -43,12 +45,17 @@ class PowerUp : public GameObject {
     double getSpeedY() const;
     bool getIsActive() const;
     PowerUpType getType() const;
-
+    int getDuration() const;
+    bool getHasDuration() const;
+    bool getIsUsed() const;
     // Setters
     void setSpeedX(double speedX);
     void setSpeedY(double speedY);
     void setIsActive(bool isActive);
     void setType(PowerUpType type);
+    void setDuration(int duration);
+    void setHasDuration(bool has_duration);
+    void setIsUsed(bool isUsed);
 
     // Methods
     /**
@@ -83,8 +90,11 @@ class PowerUp : public GameObject {
   private:
     double _speedX;
     double _speedY;
+    bool _has_duration = false;
+    int _duration = 0;
     PowerUpType _type; // Type de power-up
-    bool _isActive = true;
+    bool _isActive = false;
+    bool _isUsed = false;
 };
 
 #endif // BALL_H

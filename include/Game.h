@@ -56,6 +56,10 @@ class Game {
 
     bool isAllBallDown();
 
+    void applyPowerUp(std::shared_ptr<PowerUp> powerUp);
+
+    void desapplyPowerUp(std::shared_ptr<PowerUp> powerUp);
+
   private:
     void init(std::string configuration);
     void handleEvents();
@@ -73,6 +77,7 @@ class Game {
     std::shared_ptr<Platform> _platform;
     std::vector<std::shared_ptr<Ball>> _ball;
     std::vector<std::shared_ptr<Brick>> _bricks;
+    std::vector<std::shared_ptr<PowerUp>> _powerUps;
 };
 
 #endif // GAME_H

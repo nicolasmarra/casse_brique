@@ -54,8 +54,27 @@ bool PowerUp::getIsActive() const { return _isActive; }
 
 void PowerUp::setIsActive(bool isActive) { _isActive = isActive; }
 
-void PowerUp::setInvisible() { setRadius(0); }
+void PowerUp::setInvisible() {
+    setRadius(0);
+    // couleur noire
+    SDL_Color color = {0, 0, 0, 255};
+    setColor(color);
+}
 
 PowerUpType PowerUp::getType() const { return _type; }
 
 void PowerUp::setType(PowerUpType type) { _type = type; }
+
+int PowerUp::getDuration() const { return _duration; }
+
+void PowerUp::setDuration(int duration) { _duration = duration; }
+
+bool PowerUp::getHasDuration() const { return _has_duration; }
+
+void PowerUp::setHasDuration(bool has_duration) {
+    _has_duration = has_duration;
+}
+
+bool PowerUp::getIsUsed() const { return _isUsed; }
+
+void PowerUp::setIsUsed(bool isUsed) { _isUsed = isUsed; }

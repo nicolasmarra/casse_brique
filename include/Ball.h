@@ -1,6 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
+#include "Brick.h"
 #include "GameObject.h"
 #include <cmath>
 
@@ -72,7 +73,24 @@ class Ball : public GameObject {
      */
 
     bool collideWithBrick(double brickX, double brickY, double brickWidth,
-                          double brickHeight);
+                          double brickHeight, BrickType type);
+
+    bool collideWithRectangle(double rectangleX, double rectangleY,
+                              double rectangleWidth, double rectangleHeight);
+
+    bool collideWithTriangle(double triangleX, double triangleY,
+                             double triangleWidth, double triangleHeight);
+
+    bool pointInTriangle(SDL_Point pt, SDL_Point v1, SDL_Point v2,
+                         SDL_Point v3);
+
+    float sign(SDL_Point p1, SDL_Point p2, SDL_Point p3);
+
+    bool collideWithHexagon(double hexagonX, double hexagonY,
+                            double hexagonWidth, double hexagonHeight);
+
+    void calculateAngle(double brickX, double brickY, double brickWidth,
+                        double brickHeight);
 
     /**
      * @brief Set the ball object invisible

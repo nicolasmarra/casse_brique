@@ -88,6 +88,9 @@ void Brick::changeColor(SDL_Renderer *renderer) {
 void Brick::setInvisible() {
     setWidth(0);
     setHeight(0);
+    // couleur noire
+    SDL_Color color = {0, 0, 0, 255};
+    setColor(color);
 }
 
 /*
