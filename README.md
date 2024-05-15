@@ -50,6 +50,12 @@ Le jeu génére des balles supplémentaires. Ces balles supplémentaires peuvent
 
 Pour l'apparition de bonus/malus et de la multi-balle dans une brique, il y a une certaine probabilité pour qu'ils soient contenus dans les briques. Si une brique contient une multi-balle, elle ne pourra pas contenir d'autres bonus/malus.
 
+### - Nouveautés depuis la présentation 
+
+*1. Ajout des bonus/malus* 
+*2. Ajout d'un système de vie*
+*3. Amélioration du système de score*
+
 ## Compilation et exécution
 
 1. Il faut avoir installé SDL2 sur votre machine.
