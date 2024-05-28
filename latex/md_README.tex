@@ -1,0 +1,87 @@
+Ce projet consiste à faire un remake du jeu classique de casse-\/briques, il sera développé en C++ avec l\textquotesingle{}utilisation de la bibliothèque SDL2 pour l\textquotesingle{}affichage.\hypertarget{md_README_autotoc_md1}{}\doxysection{Fonctionnalités}\label{md_README_autotoc_md1}
+
+\begin{DoxyItemize}
+\item \mbox{[}x\mbox{]} Plateforme déplaçable au clavier ou à la souris.
+\item \mbox{[}x\mbox{]} Balle rebondissant en fonction de son angle d\textquotesingle{}impact.
+\item \mbox{[}x\mbox{]} Briques de différents types avec différentes résistances.
+\item \mbox{[}x\mbox{]} Bonus/malus, y compris le multi-\/balle.
+\item \mbox{[}x\mbox{]} Grilles chargées depuis un fichier ASCII.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md2}{}\doxysection{Fonctionnement du jeu}\label{md_README_autotoc_md2}
+\hypertarget{md_README_autotoc_md3}{}\doxysubsection{-\/ Objectif}\label{md_README_autotoc_md3}
+Le but du jeu est de détruire toutes les briques présentes sur l\textquotesingle{}écran en rebondissant une balle avec une plateforme mobile.\hypertarget{md_README_autotoc_md4}{}\doxysubsection{-\/ Contrôles}\label{md_README_autotoc_md4}
+Vous pouvez utiliser les touches fléchées gauche et droite pour déplacer la plateforme.\hypertarget{md_README_autotoc_md5}{}\doxysubsection{-\/ Mécaniques de jeu}\label{md_README_autotoc_md5}
+{\itshape 1. Plateforme \+:} La plateforme est contrôlée par le joueur et sert à renvoyer la balle. Si la balle tombe en dessous de la plateforme, le joueur perd des points (-\/5 sur son score).
+
+{\itshape 2. Balle \+:} La balle rebondit sur les murs et les briques. Si elle touche une brique, la brique perd de la résistance. Si la résistance d\textquotesingle{}une brique atteint 0, elle est détruite. Lorsque la balle touche une brique, le joueur gagne des points(+1 sur son score) et si le joueur détruit une brique, il gagne 5 points sur score. Si toutes les balles sont détruites, le joueur perd une vie.
+
+{\itshape 3. Briques \+:} Il existe différents types de briques avec des résistances différentes. Certaines briques peuvent contenir des bonus ou des malus, ou une balle. Les briques peuvent avoir 3 formes (rectangles, triangles ou hexagones).
+
+{\itshape 4. Score \+:} Le score augmente à chaque fois qu\textquotesingle{}une brique est détruite (+5), ou à chaque fois que l\textquotesingle{}on touche à une brique avec la balle (+1). Si la balle tombe en dessous de la plateforme, on perd 5 points.
+
+{\itshape 5. Vies \+:} Le joueur commence avec un nombre de vies défini (3 vies). Une vie est perdue quand le joueur perd toutes les balles et une nouvelle bale est remis. Lorsque la vie arrive à 0, le joueur perd la partie.
+
+{\itshape 6. Bonus et Malus \+:} Notre propose un système de bonus et de malus qui peuvent être obtenus en détruisant des briques spécifiques et en récuperant ces bonus et malus à l\textquotesingle{}aide de la plateforme mobile. Les bonus sont répresentent par la couleur blanche et les malus par la couleur rouge.
+
+{\itshape Bonus \+:}
+
+
+\begin{DoxyItemize}
+\item Agrandissement de la plateforme \+: Augmente la taille de la plateforme. Il y a toutefois une limite de la longeur de la plateforme maximale (300).
+\item Vie supplémentaire \+: Ajoute une vie supplémentaire au joueur.\+Il y a un nombre de vie max à obtenir pendant une partie (6).
+\end{DoxyItemize}
+
+{\itshape Malus \+:}
+
+
+\begin{DoxyItemize}
+\item Réduction de la taille de la plateforme \+: Diminue la taille de la plateforme. Il y a toutefois une limite de la longeur de la plateforme minimale (50).
+\item Perte de vie \+: Fait perdre une vie au joueur.
+\end{DoxyItemize}
+
+Les limites pour les bonus et les malus peuvent être modifiés.
+
+{\itshape Multi-\/\+Balle} Le jeu génére des balles supplémentaires. Ces balles supplémentaires peuvent être obtenues en détruisant des briques spéciales.
+
+Pour l\textquotesingle{}apparition de bonus/malus et de la multi-\/balle dans une brique, il y a une certaine probabilité pour qu\textquotesingle{}ils soient contenus dans les briques. Si une brique contient une multi-\/balle, elle ne pourra pas contenir d\textquotesingle{}autres bonus/malus.\hypertarget{md_README_autotoc_md6}{}\doxysubsection{-\/ Nouveautés depuis la présentation}\label{md_README_autotoc_md6}
+{\itshape 1. Ajout des bonus/malus} {\itshape 2. Ajout d\textquotesingle{}un système de vie} {\itshape 3. Amélioration du système de score}\hypertarget{md_README_autotoc_md7}{}\doxysection{Compilation et exécution}\label{md_README_autotoc_md7}
+
+\begin{DoxyEnumerate}
+\item Il faut avoir installé SDL2 sur votre machine.
+\item Après, il faut ce dépôt sur votre machine.
+\item Ensuite, il faut générez le projet avec CMake et le compiler avec make\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir build}
+\DoxyCodeLine{cd build}
+\DoxyCodeLine{cmake ..}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Exécutez le jeu \+:
+\end{DoxyEnumerate}
+
+Pour exécuter le jeu, on peut charger un fichier contenant les grilles en ASCII, en premier ligne du fichier on défini le type de brique et on utilise les caractères suivants pour définir le type de résistance (\#,+,$\ast$). Soit on peut choisir un type de brique et les briques seront construites avec des résistance aléatoires.
+
+Pour charger un fichier de grille en ASCII\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./CasseBrique tests/test1.txt}
+
+\end{DoxyCode}
+
+
+Pour générer des grilles aléatoires avec différents types de briques\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./CasseBrique rectangle }
+\DoxyCodeLine{./CasseBrique triangle }
+\DoxyCodeLine{./CasseBrique hexagon }
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md8}{}\doxysection{Auteur}\label{md_README_autotoc_md8}
+Nicolas MARRA Eddine NASRI\hypertarget{md_README_autotoc_md9}{}\doxysection{Licence}\label{md_README_autotoc_md9}
+Ce projet est sous \mbox{[}licence\mbox{]}(LICENSE). 
