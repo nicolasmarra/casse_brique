@@ -52,9 +52,9 @@ Pour l'apparition de bonus/malus et de la multi-balle dans une brique, il y a un
 
 ### - Nouveautés : 
 
-*1. Ajout des bonus/malus*. 
-*2. Ajout d'un système de vie*.
-*3. Amélioration du système de score*.
+1. Ajout des bonus/malus. 
+2. Ajout d'un système de vie.
+3. Amélioration du système de score.
 
 ## Compilation et exécution
 
